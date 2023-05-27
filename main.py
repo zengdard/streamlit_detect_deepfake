@@ -33,7 +33,7 @@ from PIL import Image, ImageDraw
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
-def apply_fake_filter(image, fake_score):
+def apply_fake_filter(image, fake_score, add_text):
     # Convert the image to a NumPy array
     image_array = np.array(image)
 
@@ -59,7 +59,7 @@ def apply_fake_filter(image, fake_score):
     
     
  # Calculate the additional text's coordinates
-    additional_text_width, additional_text_height = draw.textsize('FAKE', font)
+    additional_text_width, additional_text_height = draw.textsize(add_text, font)
     additional_text_x = (width - additional_text_width) // 2
     additional_text_y = text_y + text_height
 
@@ -75,7 +75,11 @@ def apply_fake_filter(image, fake_score):
     # Create a mask image with the red filter
     mask_image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     mask_draw = ImageDraw.Draw(mask_image)
-    mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(255, 0, 0, int(255*0.5)))
+    if add_text == 'fake' :
+        mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(255, 0, 0, int(255*0.5)))
+    esle:
+        mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(0, 0, 255, int(255*0.5)))
+
 
     # Create a composite image that includes the original image and the filter
     filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
@@ -141,5 +145,5 @@ if uploaded_file is not None:
     st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
 
     # Appliquer le hachurage
-    hatched_image = apply_fake_filter(image3,np.amax(y_pred))
+    hatched_image = apply_fake_filter(image3,np.amax(y_pred), class_names[y_pred_class])
     st.image(hatched_image, caption="Image avec hachurage", use_column_width=True)

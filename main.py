@@ -66,7 +66,7 @@ def apply_gradient_and_text(image, percentage, fake_score):
     blended_image_pillow = Image.fromarray(blended_image)
 
     # Specify the font and size
-    font = ImageFont.truetype("arial", size=75)
+    font = ImageFont.truetype(POLICE, size=75)
 
     # Create an ImageDraw object
     draw = ImageDraw.Draw(blended_image_pillow)

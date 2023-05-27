@@ -52,21 +52,16 @@ def apply_hatching(image, percentage, fake_score):
     # Dessiner le texte sur l'image avec l'opacité réduite
     draw.text((x, y), text, font=font, fill=(255, 255, 255, 255))
 
-    # Calculer la taille du filtre rouge proportionnellement au pourcentage
-    filter_height = int(height * percentage)
+    # Créer le filtre rouge proportionnel à l'image
     red_filter = Image.new("RGBA", (width, filter_height), (255, 0, 0, 128))
 
-    # Créer une image masque blanche pour le reste de l'image
-    white_mask = Image.new("RGBA", (width, height - filter_height), (255, 255, 255, 255))
-
-    # Fusionner le filtre rouge et le masque blanc
-    filter_image = Image.alpha_composite(red_filter, white_mask)
+    # Redimensionner le filtre rouge pour qu'il corresponde à la taille de l'image
+    red_filter_resized = red_filter.resize((width, height), Image.ANTIALIAS)
 
     # Fusionner le filtre avec l'image d'origine
-    image_with_filter = Image.alpha_composite(image.convert("RGBA"), filter_image)
+    image_with_filter = Image.alpha_composite(image.convert("RGBA"), red_filter_resized)
 
     return image_with_filter
-
 
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0

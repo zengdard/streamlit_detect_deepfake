@@ -88,5 +88,5 @@ if uploaded_file is not None:
     st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
 
     # Appliquer le hachurage
-    hatched_image = apply_hatching(image3, y_pred / 100)
+    hatched_image = apply_hatching(image3, np.amax(y_pred) / 100)
     st.image(hatched_image, caption="Image avec hachurage", use_column_width=True)

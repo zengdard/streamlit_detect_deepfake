@@ -20,8 +20,8 @@ def download_file(url, local_path):
                 f.write(chunk)
 
 def load_keras_model_from_hub(model_id):
-    model_url = f"https://huggingface.co/{model_id}/resolve/main/TALEYRAND.h5"
-    local_path = "model_casia_run1.h5"
+    model_url = f"https://huggingface.co/{model_id}/resolve/main/model_casia_run1.h5"
+    local_path = "model_casia_run1"
     download_file(model_url, local_path)
 
 def prepare_image(image_path):

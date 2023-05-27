@@ -56,7 +56,7 @@ def apply_hatching(image, percentage, fake_score):
     red_filter = Image.new("RGBA", (width, filter_height), (255, 0, 0, 128))
 
     # Redimensionner le filtre rouge pour qu'il corresponde à la taille de l'image
-    red_filter_resized = red_filter.resize((width *fake_score , height*fake_score), Image.ANTIALIAS)
+    red_filter_resized = red_filter.resize((int(width *fake_score) , int(height*fake_score)), Image.ANTIALIAS)
 
     # Fusionner le filtre avec l'image d'origine
     image_with_filter = Image.alpha_composite(image.convert("RGBA"), red_filter_resized)

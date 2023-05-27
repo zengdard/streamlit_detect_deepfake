@@ -4,6 +4,7 @@ import keras
 from keras_nlp.tokenizers import UnicodeCodepointTokenizer
 from keras.models import load_model
 import streamlit as st
+from PIL import Image
 
 os.environ["HUGGINGFACE_TOKEN"] = "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"
 

@@ -58,7 +58,7 @@ def apply_hatching(image, percentage, fake_score):
     # Créer une nouvelle image PIL avec le filtre et le texte appliqués
     filtered_image = Image.fromarray(image_array)
 
-    return filtered_image
+    return image
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0
 

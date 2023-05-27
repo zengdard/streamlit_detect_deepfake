@@ -49,6 +49,16 @@ st.title("Détection de fausses images")
 # Charger l'image
 uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "png"])
 if uploaded_file is not None:
+    try: 
+        model = load_model('TALEYRAND.h5')
+        model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
+
+    except:
+        load_keras_model_from_hub('nielzac/private_fake')
+
+    model = load_model('TALEYRAND.h5',compile=False)
+    model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
+
     image = Image.open(uploaded_file)
     st.image(image, caption="Image originale", use_column_width=True)
 

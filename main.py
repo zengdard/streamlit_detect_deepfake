@@ -55,7 +55,7 @@ def apply_fake_filter(image, fake_score, add_text):
     # Specify the coordinates of the text in the middle of the image
     text_width, text_height = draw.textsize(text, font)
     text_x = (width - text_width) // 2
-    text_y = (height - text_height) // 2 + 60
+    text_y = (height - text_height) // 2 + 0
 
     # Draw the text on the image in white
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))

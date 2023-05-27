@@ -50,7 +50,7 @@ st.title("Détection de fausses images")
 uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "png"])
 if uploaded_file is not None:
     try: 
-        model = load_model('TALEYRAND.h5')
+        model = load_model('model_casia_run1.h5')
         model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
 
     except:

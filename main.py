@@ -26,6 +26,9 @@ def load_keras_model_from_hub(model_id):
     download_file(model_url, local_path)
 import numpy as np
 from PIL import Image, ImageDraw
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance
+
 def apply_hatching(image, percentage, fake_score):
     # Convertir l'image en tableau NumPy
     image_array = np.array(image)
@@ -53,15 +56,20 @@ def apply_hatching(image, percentage, fake_score):
     # Dessiner le texte sur l'image en blanc
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
 
-    # Créer un masque d'opacité pour le filtre rouge
-    opacity_mask = Image.new("L", (width, height), 0)
-    opacity_mask.paste(255, (0, 0, width, filter_height))
+    # Créer une image masque avec le filtre rouge et le texte
+    mask_image = Image.new("RGBA", (width, height), (255, 0, 0, 128))
+    mask_image = mask_image.convert("RGBA")
 
-    # Appliquer le filtre rouge à l'image avec l'opacité réduite
-    red_filter = Image.new("RGBA", (width, height), (255, 0, 0, 128))
-    image_with_filter = Image.composite(red_filter, image.convert("RGBA"), opacity_mask)
+    # Réduire l'opacité du masque
+    opacity = 0.5
+    enhancer = ImageEnhance.Brightness(mask_image)
+    mask_image = enhancer.enhance(opacity)
 
-    return image_with_filter
+    # Appliquer le masque sur l'image d'origine
+    filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
+
+    return filtered_image
+
 
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0

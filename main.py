@@ -33,7 +33,8 @@ from PIL import Image, ImageDraw
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
-def apply_fake_filter(image, percentage, fake_score):
+
+def apply_fake_filter(image, fake_score):
     # Convert the image to a NumPy array
     image_array = np.array(image)
 
@@ -44,7 +45,7 @@ def apply_fake_filter(image, percentage, fake_score):
     text = f"FAKE: {fake_score*100}%"
 
     # Specify the font and size
-    font = ImageFont.truetype(POLICE, size=75)
+    font = ImageFont.truetype("arial.ttf", size=75)
 
     # Create an ImageDraw object
     draw = ImageDraw.Draw(image)
@@ -57,15 +58,17 @@ def apply_fake_filter(image, percentage, fake_score):
     # Draw the text on the image in white
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
 
+    # Calculate filter size based on fake_score
+    filter_height = int(height * fake_score)
+
     # Create a mask image with the red filter
-    mask_image = Image.new("RGBA", (width, height), (255, 0, 0, int(255*percentage)))
+    mask_image = Image.new("RGBA", (width, filter_height), (255, 0, 0, int(255*0.5)))
     mask_image = mask_image.convert("RGBA")
 
-    # Apply the mask on the original image
+    # Create a composite image that includes the original image and the filter
     filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
 
     return filtered_image
-
 
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0
@@ -126,5 +129,5 @@ if uploaded_file is not None:
     st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
 
     # Appliquer le hachurage
-    hatched_image = apply_fake_filter(image3, np.amax(y_pred),np.amax(y_pred))
+    hatched_image = apply_fake_filter(image3,np.amax(y_pred))
     st.image(hatched_image, caption="Image avec hachurage", use_column_width=True)

@@ -121,8 +121,10 @@ if uploaded_file is not None:
     image3 = Image.open(uploaded_file)
     image = image3
     #st.image(image, caption="Image originale", use_column_width=True)
-    
-    image.save("chemin_de_sauvegarde.jpg")
+    try:
+        image.save("chemin_de_sauvegarde.jpg")
+    except:
+         st.warning('Bad File')
     print('#################OK')
     model = load_model('model_casia_run1.h5', compile=False)
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])

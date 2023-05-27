@@ -21,7 +21,7 @@ def download_file(url, local_path):
 
 def load_keras_model_from_hub(model_id):
     model_url = f"https://huggingface.co/{model_id}/resolve/main/model_casia_run1.h5"
-    local_path = "Altered_Picture_Model"
+    local_path = "model_casia_run1.h5"
     download_file(model_url, local_path)
 
 def prepare_image(image_path):
@@ -56,11 +56,11 @@ uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "p
 
 if uploaded_file is not None:
     try:
-        model = load_model('model_casia_run1.h5')
+        model = load_model('Altered_Picture_Model')
         model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
 
     except:
-        load_keras_model_from_hub('Nielzac/Altered_Picture_Model')
+        load_keras_model_from_hub('Altered_Picture_Model')
 
     image = Image.open(uploaded_file)
     st.image(image, caption="Image originale", use_column_width=True)

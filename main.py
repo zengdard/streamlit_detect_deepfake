@@ -32,44 +32,35 @@ import numpy as np
 from PIL import Image, ImageDraw
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
-
-def apply_hatching(image, percentage, fake_score):
-    # Convertir l'image en tableau NumPy
+def apply_fake_filter(image, percentage, fake_score):
+    # Convert the image to a NumPy array
     image_array = np.array(image)
 
-    # Déterminer les dimensions de l'image
+    # Determine the image dimensions
     height, width, _ = image_array.shape
 
-    # Calculer la hauteur de la partie à filtrer
-    filter_height = int(height * percentage)
+    # Convert the fake score to text
+    text = f"FAKE: {fake_score*100}%"
 
-    # Convertir le score de fausseté en texte
-    text = "FAKE"
-
-    # Spécifier la police et la taille
+    # Specify the font and size
     font = ImageFont.truetype(POLICE, size=75)
 
-    # Créer un objet ImageDraw
+    # Create an ImageDraw object
     draw = ImageDraw.Draw(image)
 
-    # Spécifier les coordonnées du texte au milieu de l'image
+    # Specify the coordinates of the text in the middle of the image
     text_width, text_height = draw.textsize(text, font)
     text_x = (width - text_width) // 2
     text_y = (height - text_height) // 2
 
-    # Dessiner le texte sur l'image en blanc
+    # Draw the text on the image in white
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
 
-    # Créer une image masque avec le filtre rouge et le texte
-    mask_image = Image.new("RGBA", (width, height - filter_height), (255, 0, 0, 128))
+    # Create a mask image with the red filter
+    mask_image = Image.new("RGBA", (width, height), (255, 0, 0, int(255*percentage)))
     mask_image = mask_image.convert("RGBA")
 
-    # Réduire l'opacité du masque
-    opacity = 0.5
-    enhancer = ImageEnhance.Brightness(mask_image)
-    mask_image = enhancer.enhance(opacity)
-
-    # Appliquer le masque sur l'image d'origine
+    # Apply the mask on the original image
     filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
 
     return filtered_image

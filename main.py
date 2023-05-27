@@ -46,11 +46,22 @@ def apply_fake_filter(image, fake_score, additional_text):
 
     font_size = int(height * 0.15)  # adjust the percentage as needed
 
+    # Create a mask image with the color filter and apply it to the entire image
+    mask_image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    mask_draw = ImageDraw.Draw(mask_image)
+    if additional_text == 'fake':
+        mask_draw.rectangle([(0, 0), (width, height)], fill=(255, 0, 0, int(255*0.7)))
+    else:
+        mask_draw.rectangle([(0, 0), (width, height)], fill=(0, 0, 255, int(255*0.7)))
+
+    # Create a composite image that includes the original image and the filter
+    filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
+
     # Specify the font and size
     font = ImageFont.truetype(POLICE, size=font_size)
 
     # Create an ImageDraw object
-    draw = ImageDraw.Draw(image)
+    draw = ImageDraw.Draw(filtered_image)
 
     # Specify the coordinates of the text in the middle of the image
     text_width, text_height = draw.textsize(text, font)
@@ -67,17 +78,6 @@ def apply_fake_filter(image, fake_score, additional_text):
 
     # Draw the additional text on the image in white
     draw.text((additional_text_x, additional_text_y), additional_text, font=font, fill=(255, 255, 255))
-
-    # Create a mask image with the red filter and apply it to the entire image
-    mask_image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    mask_draw = ImageDraw.Draw(mask_image)
-    if additional_text == 'fake' :
-        mask_draw.rectangle([(0, 0), (width, height)], fill=(255, 0, 0, int(255*0.7)))
-    else:
-        mask_draw.rectangle([(0, 0), (width, height)], fill=(0, 0, 255, int(255*0.7)))
-
-    # Create a composite image that includes the original image and the filter
-    filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
 
     return filtered_image
 def prepare_image(image_path):

@@ -32,18 +32,11 @@ def apply_hatching(image, percentage):
     # Déterminer les dimensions de l'image
     height, width, _ = image_array.shape
 
-    # Calculer le nombre de pixels à remplacer par le filtre rouge
-    num_pixels = int(height * width * (percentage / 100))
+    # Calculer la hauteur de la partie à filtrer
+    filter_height = int(height * (percentage / 100))
 
-    # Générer les indices aléatoires des pixels à modifier
-    pixel_indices = np.random.choice(height * width, size=num_pixels, replace=False)
-
-    # Appliquer le filtre rouge aux pixels sélectionnés
-    image_array_flat = image_array.reshape(-1, 3)  # Convertir en tableau 2D (pixels x 3)
-    image_array_flat[pixel_indices] = [255, 0, 0]  # Couleur rouge pour le filtre
-
-    # Remettre le tableau dans la forme originale
-    image_array = image_array_flat.reshape(height, width, 3)
+    # Appliquer le filtre rouge à la partie de l'image
+    image_array[:filter_height, :, :] = [255, 0, 0]  # Couleur rouge pour le filtre
 
     # Créer une nouvelle image PIL avec le filtre appliqué
     filtered_image = Image.fromarray(image_array)

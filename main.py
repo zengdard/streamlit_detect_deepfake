@@ -54,9 +54,9 @@ if uploaded_file is not None:
         model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
 
     except:
-        load_keras_model_from_hub('nielzac/private_fake')
+        load_keras_model_from_hub('Nielzac/Altered_Picture_Model')
 
-    model = load_model('TALEYRAND.h5',compile=False)
+    model = load_model('model_casia_run1.h5',compile=False)
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
 
     image = Image.open(uploaded_file)

@@ -43,7 +43,7 @@ def apply_hatching(image, percentage, fake_score):
     text = f"Score: {fake_score:.2f}"
 
     # Spécifier la police et la taille
-    font = ImageFont.truetype("TypoSlab Irregular shadowed_demo.otf", size=40)
+    font = ImageFont.truetype("TypoSlab Irregular shadowed_demo.otf", size=200)
 
     # Créer un objet ImageDraw
     draw = ImageDraw.Draw(image)
@@ -53,7 +53,7 @@ def apply_hatching(image, percentage, fake_score):
     y = width/2
 
     # Dessiner le texte sur l'image avec l'opacité réduite
-    draw.text((x, y), text, font=font, fill=(255, 255, 255, 128))
+    draw.text((x, y), text, font=font, fill=(255, 255, 255, 255))
 
     # Créer une nouvelle image PIL avec le filtre et le texte appliqués
     filtered_image = Image.fromarray(image_array)

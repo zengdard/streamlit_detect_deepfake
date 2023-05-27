@@ -42,7 +42,7 @@ def apply_hatching(image, percentage, fake_score):
     text = f"Score: {fake_score:.2f}"
 
     # Spécifier la police et la taille
-    font = ImageFont.truetype("chemin_vers_la_police.ttf", size=40)
+    font = ImageFont.truetype("TypoSlab Irregular shadowed_demo.otf", size=40)
 
     # Créer un objet ImageDraw
     draw = ImageDraw.Draw(image)

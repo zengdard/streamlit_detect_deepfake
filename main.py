@@ -45,7 +45,7 @@ def apply_fake_filter(image, fake_score):
     text = f"FAKE: {fake_score*100}%"
 
     # Specify the font and size
-    font = ImageFont.truetype("arial.ttf", size=75)
+    font = ImageFont.truetype(POLICE, size=75)
 
     # Create an ImageDraw object
     draw = ImageDraw.Draw(image)

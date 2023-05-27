@@ -35,7 +35,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-def apply_gradient_and_text(image, percentage, fake_score):
+def apply_gradient_and_text(image, fake_score, additional_text):
     # Convert image to numpy array
     image_array = np.array(image)
 
@@ -47,16 +47,16 @@ def apply_gradient_and_text(image, percentage, fake_score):
     mask = np.zeros((height, width), dtype=np.uint8)
 
     # Calculate the start and end values for the gradient
-    start_value = int(255 * 0.5)  # 50% opacity
+    start_value = int(255 * 0.7)  # 70% opacity
     end_value = 0  # 0% opacity
 
     # Calculate the values for each pixel in the mask
     for i in range(filter_height, height):
         mask[i] = np.interp(i, [filter_height, height], [start_value, end_value])
 
-    # Create a colored image (blue) with the same size as the original image
+    # Create a colored image with the same size as the original image
     color_image = np.zeros((height, width, 3), dtype=np.uint8)
-    color_image[:,:] = (255, 0, 0)  # Blue color
+    color_image[:,:] = (255, 0, 0) if additional_text == "fake" else (0, 0, 255)  # Red or Blue color
 
     # Blend the original image with the color image using the mask
     blended_image = cv2.bitwise_and(color_image, color_image, mask=mask)
@@ -66,22 +66,28 @@ def apply_gradient_and_text(image, percentage, fake_score):
     blended_image_pillow = Image.fromarray(blended_image)
 
     # Specify the font and size
-    font = ImageFont.truetype(POLICE, size=75)
+    font_size = int(height * 0.28)  # Adjust the percentage as needed
+    font = ImageFont.truetype("arial", size=font_size)
 
     # Create an ImageDraw object
     draw = ImageDraw.Draw(blended_image_pillow)
 
     # Convert fake score to text and calculate the text's coordinates
-    text = "FAKE {:.1f}%".format(fake_score * 100)
+    text = f"{int(fake_score*100)}%"
     text_width, text_height = draw.textsize(text, font)
     text_x = (width - text_width) // 2
-    text_y = (height - text_height) // 4
+    text_y = height // 2 - text_height
 
-    # Draw the text on the image in white
+    # Calculate the additional text's coordinates
+    additional_text_width, additional_text_height = draw.textsize(additional_text, font)
+    additional_text_x = (width - additional_text_width) // 2
+    additional_text_y = height // 2
+
+    # Draw the text and the additional text on the image in white
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
+    draw.text((additional_text_x, additional_text_y), additional_text, font=font, fill=(255, 255, 255))
 
     return blended_image_pillow
-
 
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0
@@ -142,7 +148,7 @@ if uploaded_file is not None:
     st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
 
     # Appliquer le hachurage
-    hatched_image = apply_gradient_and_text(image3,np.amax(y_pred), np.amax(y_pred))
+    hatched_image = apply_gradient_and_text(image3,np.amax(y_pred), class_names[y_pred_class])
 
     # Display the image
     st.image(hatched_image, use_column_width=False)

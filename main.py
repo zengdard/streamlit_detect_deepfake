@@ -33,7 +33,7 @@ def apply_hatching(image, percentage):
     height, width, _ = image_array.shape
 
     # Calculer la hauteur de la partie à filtrer
-    filter_height = int(height * (percentage / 100))
+    filter_height = int(height * (percentage))
 
     # Appliquer le filtre rouge à la partie de l'image
     image_array[:filter_height, :, :] = [255, 0, 0]  # Couleur rouge pour le filtre

@@ -25,32 +25,39 @@ def load_keras_model_from_hub(model_id):
     download_file(model_url, local_path)
 import numpy as np
 from PIL import Image, ImageDraw
-def apply_hatching(image, percentage, opacity=0.5):
-    # Convertir l'image en mode RGBA
-    image_rgba = image.convert("RGBA")
-
-    # Séparer les canaux de l'image
-    red, green, blue, alpha = image_rgba.split()
+def apply_hatching(image, percentage, fake_score):
+    # Convertir l'image en tableau NumPy
+    image_array = np.array(image)
 
     # Déterminer les dimensions de l'image
-    width, height = image_rgba.size
+    height, width, _ = image_array.shape
 
     # Calculer la hauteur de la partie à filtrer
-    filter_height = int(height * (percentage))
+    filter_height = int(height * (percentage / 100))
 
-    # Créer un tableau pour le canal d'opacité
-    opacity_array = np.full((height, width), int(255 * opacity), dtype=np.uint8)
+    # Appliquer le filtre rouge à la partie de l'image
+    image_array[:filter_height, :, :] = [255, 0, 0]  # Couleur rouge pour le filtre
 
-    # Créer un tableau pour le canal rouge filtré
-    red_filtered = np.where(np.arange(height)[:, None] < filter_height, 255, red)
+    # Convertir le score de fausseté en texte
+    text = f"Score: {fake_score:.2f}"
 
-    # Fusionner les canaux avec le canal d'opacité
-    filtered_image_rgba = Image.fromarray(np.dstack((red_filtered, green, blue, opacity_array)))
+    # Spécifier la police et la taille
+    font = ImageFont.truetype("chemin_vers_la_police.ttf", size=40)
 
-    # Convertir l'image en mode RGB
-    filtered_image_rgb = filtered_image_rgba.convert("RGB")
+    # Créer un objet ImageDraw
+    draw = ImageDraw.Draw(image)
 
-    return filtered_image_rgb
+    # Spécifier les coordonnées du texte
+    x = 10
+    y = 10
+
+    # Dessiner le texte sur l'image avec l'opacité réduite
+    draw.text((x, y), text, font=font, fill=(255, 255, 255, 128))
+
+    # Créer une nouvelle image PIL avec le filtre et le texte appliqués
+    filtered_image = Image.fromarray(image_array)
+
+    return filtered_image
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0
 

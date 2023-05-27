@@ -7,7 +7,7 @@ from PIL import Image
 import numpy as np
 
 from PIL import Image, ImageChops, ImageEnhance
-
+class_names = ['fake', 'real']
 os.environ["HUGGINGFACE_TOKEN"] = "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"
 
 image_size = (128, 128)
@@ -68,9 +68,10 @@ if uploaded_file is not None:
     image.save("chemin_de_sauvegarde.jpg")
     model = load_model('model_casia_run1.h5', compile=False)
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
-    prepared_image = prepare_image('chemin_de_sauvegarde.jpg')
-    X = np.array(prepared_image)
-    X = X.reshape(-1, 128, 128, 3)
+   
+    image = prepare_image("chemin_de_sauvegarde.jpg")
+    image = image.reshape(-1, 128, 128, 3)
+    y_pred = model.predict(image)
     # Prédiction
     prediction = model.predict(X)
     fake_percentage = prediction[0][1] * 100

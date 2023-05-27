@@ -82,7 +82,7 @@ def apply_fake_filter(image, fake_score, additional_text):
     # Create a composite image that includes the original image and the filter
     filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
 
-    return filtered_imageh.resize(medium_size)
+    return filtered_image.resize(medium_size)
 
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0

@@ -84,8 +84,8 @@ if uploaded_file is not None:
     y_pred = model.predict(image2)
     # Prédiction
     
-    fake_percentage = y_pred[0][1] * 100
-    st.write(f"Probabilité d'être fausse : {fake_percentage:.2f}%")
+    y_pred_class = np.argmax(y_pred, axis = 1)[0]
+    st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
 
     # Appliquer le hachurage
     hatched_image = apply_hatching(image3, fake_percentage / 100)

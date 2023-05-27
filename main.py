@@ -49,8 +49,8 @@ def apply_hatching(image, percentage, fake_score):
     draw = ImageDraw.Draw(image)
 
     # Spécifier les coordonnées du texte
-    x = 10
-    y = 10
+    x = height/2
+    y = width/2
 
     # Dessiner le texte sur l'image avec l'opacité réduite
     draw.text((x, y), text, font=font, fill=(255, 255, 255, 128))

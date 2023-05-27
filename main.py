@@ -123,31 +123,32 @@ if uploaded_file is not None:
     #st.image(image, caption="Image originale", use_column_width=True)
     try:
         image.save("chemin_de_sauvegarde.jpg")
+        print('#################OK')
+        model = load_model('model_casia_run1.h5', compile=False)
+        model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
+        #filtered_image = filtered_image.convert("RGB")
+        #filtered_image.save("filtered_image.jpg", "JPEG")
+        image = prepare_image("chemin_de_sauvegarde.jpg")
+        print(image.shape)
+        #image = image.reshape(-1, 128, 128, 3)
+        image2 = np.reshape(image, (-1, 128, 128, 3))
+        print(image2.shape)
+        y_pred = model.predict(image2)
+        # Prédiction
+
+        y_pred_class = np.argmax(y_pred, axis = 1)[0]
+        st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
+
+        # Appliquer le hachurage
+        try:
+            hatched_image = apply_fake_filter(image3,np.amax(y_pred), class_names[y_pred_class])
+        except:
+            st.warning('Bad File')
+            # Display the image
+            st.image(hatched_image, use_column_width=False)
     except:
          st.warning('Bad File')
-    print('#################OK')
-    model = load_model('model_casia_run1.h5', compile=False)
-    model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
-    #filtered_image = filtered_image.convert("RGB")
-    #filtered_image.save("filtered_image.jpg", "JPEG")
-    image = prepare_image("chemin_de_sauvegarde.jpg")
-    print(image.shape)
-    #image = image.reshape(-1, 128, 128, 3)
-    image2 = np.reshape(image, (-1, 128, 128, 3))
-    print(image2.shape)
-    y_pred = model.predict(image2)
-    # Prédiction
     
-    y_pred_class = np.argmax(y_pred, axis = 1)[0]
-    st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
-
-    # Appliquer le hachurage
-    try:
-        hatched_image = apply_fake_filter(image3,np.amax(y_pred), class_names[y_pred_class])
-    except:
-        st.warning('Bad File')
-    # Display the image
-    st.image(hatched_image, use_column_width=False)
     
     st.markdown("""
     ## Source des données

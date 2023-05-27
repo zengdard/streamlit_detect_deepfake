@@ -43,7 +43,7 @@ def apply_fake_filter(image, fake_score, add_text):
     # Convert the fake score to text
     text = f"{int(fake_score*100)}%"
     
-    font_size = int(height * 0.37)  # adjust the percentage as needed
+    font_size = int(height * 0.31)  # adjust the percentage as needed
 
 
     # Specify the font and size
@@ -55,7 +55,7 @@ def apply_fake_filter(image, fake_score, add_text):
     # Specify the coordinates of the text in the middle of the image
     text_width, text_height = draw.textsize(text, font)
     text_x = (width - text_width) // 2
-    text_y = (height - text_height) // 2
+    text_y = (height - text_height) // 2 + height //2
 
     # Draw the text on the image in white
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
@@ -64,7 +64,7 @@ def apply_fake_filter(image, fake_score, add_text):
  # Calculate the additional text's coordinates
     additional_text_width, additional_text_height = draw.textsize(add_text, font)
     additional_text_x = (width - additional_text_width) // 2
-    additional_text_y = text_y + text_height
+    additional_text_y = text_y + text_height + height //2
 
     # Draw the additional text on the image in white
     draw.text((additional_text_x, additional_text_y), additional_text, font=font, fill=(255, 255, 255))

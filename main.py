@@ -78,8 +78,8 @@ if uploaded_file is not None:
     except:
         load_keras_model_from_hub('Nielzac/Altered_Picture_Model')
         
-        
-    uploaded_file.save("chemin_de_sauvegarde.jpg")
+    image = Image.open(uploaded_file)
+    image.save("chemin_de_sauvegarde.jpg")
     model = load_model('model_casia_run1.h5',compile=False)
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
     image = prepare_image('chemin_de_sauvegarde.jpg')

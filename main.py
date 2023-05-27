@@ -31,7 +31,7 @@ def load_keras_model_from_hub(model_id):
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
-def apply_fake_filter(image, fake_score, add_text):
+def apply_fake_filter(image, fake_score, additional_text):
     # Convert the image to a NumPy array
     image_array = np.array(image)
 
@@ -55,7 +55,7 @@ def apply_fake_filter(image, fake_score, add_text):
     text_x = (width - text_width) // 2
     
  # Calculate the additional text's coordinates
-    additional_text_width, additional_text_height = draw.textsize(add_text, font)
+    additional_text_width, additional_text_height = draw.textsize(additional_text, font)
     additional_text_x = (width - additional_text_width) // 2
     additional_text_y = height // 2 
     

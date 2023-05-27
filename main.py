@@ -78,11 +78,11 @@ def apply_fake_filter(image, fake_score, additional_text):
     else:
         mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(0, 0, 255, int(255*0.7)))
 
-
+    medium_size = (height//2, width//2)
     # Create a composite image that includes the original image and the filter
     filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
 
-    return filtered_image
+    return filtered_imageh.resize(medium_size)
 
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0
@@ -144,8 +144,6 @@ if uploaded_file is not None:
 
     # Appliquer le hachurage
     hatched_image = apply_fake_filter(image3,np.amax(y_pred), class_names[y_pred_class])
-    medium_size = (500, 500)  # adjust the size as needed
-    hatched_image = hatched_image.resize(medium_size)
 
     # Display the image
     st.image(hatched_image, use_column_width=False)

@@ -23,11 +23,28 @@ def load_keras_model_from_hub(model_id):
     model_url = f"https://huggingface.co/Nielzac/Altered_Picture_Model/resolve/main/model_casia_run1.h5"
     local_path = "model_casia_run1.h5"
     download_file(model_url, local_path)
+
 def apply_hatching(image, percentage):
-    hatched_image = np.array(image)
-    h, w, _ = hatched_image.shape
-    mask = np.random.choice([0, 1], size=(h, w), p=[1 - percentage, percentage])
-    hatched_image[mask == 1] = [255, 0, 0]  # Couleur rouge pour le hachurage
+    # Convertir l'image en tableau NumPy
+    image_array = np.array(image)
+
+    # Déterminer les dimensions de l'image
+    height, width, _ = image_array.shape
+
+    # Calculer le nombre de traits à dessiner
+    num_lines = int(height * width * (percentage / 100))
+
+    # Générer des coordonnées aléatoires pour les traits
+    line_coords = np.random.randint(0, high=height, size=(num_lines, 2))
+
+    # Dessiner les traits sur l'image
+    for coord in line_coords:
+        x, y = coord
+        image_array[x, y, :] = [255, 0, 0]  # Couleur rouge pour les traits
+
+    # Convertir le tableau NumPy en image PIL
+    hatched_image = Image.fromarray(image_array)
+
     return hatched_image
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0

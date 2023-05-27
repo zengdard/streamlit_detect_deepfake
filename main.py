@@ -56,7 +56,7 @@ uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "p
 
 if uploaded_file is not None:
     try:
-        model = load_model('Altered_Picture_Model')
+        model = load_model('model_casia_run1.h5')
         model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
 
     except:

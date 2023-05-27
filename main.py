@@ -139,10 +139,10 @@ if uploaded_file is not None:
     # Prédiction
     
     y_pred_class = np.argmax(y_pred, axis = 1)[0]
-    #st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
+    st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
 
     # Appliquer le hachurage
-    hatched_image = apply_gradient_and_text(image3,np.amax(y_pred), class_names[y_pred_class])
+    hatched_image = apply_gradient_and_text(image3,np.amax(y_pred), np.amax(y_pred))
 
     # Display the image
     st.image(hatched_image, use_column_width=False)

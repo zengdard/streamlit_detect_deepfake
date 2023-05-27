@@ -37,7 +37,7 @@ def apply_hatching(image, percentage, fake_score):
     height, width, _ = image_array.shape
 
     # Calculer la hauteur de la partie à filtrer
-    filter_height = int(width * fake_score)
+    filter_height = int(height * fake_score)
 
     # Convertir le score de fausseté en texte
     text = "FAKE"
@@ -57,7 +57,7 @@ def apply_hatching(image, percentage, fake_score):
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
 
     # Créer une image masque avec le filtre rouge et le texte
-    mask_image = Image.new("RGBA", (filter_height, height), (255, 0, 0, 128))
+    mask_image = Image.new("RGBA", (width, filter_height), (255, 0, 0, 128))
     mask_image = mask_image.convert("RGBA")
 
     # Réduire l'opacité du masque

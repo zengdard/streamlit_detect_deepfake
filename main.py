@@ -13,6 +13,10 @@ os.environ["HUGGINGFACE_TOKEN"] = "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"
 
 image_size = (128, 128)
 
+
+POLICE = 'TypoSlab Irregular shadowed_demo.otf'
+
+
 def download_file(url, local_path):
     with requests.get(url, stream=True) as response:
         response.raise_for_status()
@@ -43,7 +47,7 @@ def apply_hatching(image, percentage, fake_score):
     text = "FAKE"
 
     # Spécifier la police et la taille
-    font = ImageFont.truetype("TypoSlab Irregular shadowed_demo.otf", size=75)
+    font = ImageFont.truetype(POLICE, size=75)
 
     # Créer un objet ImageDraw
     draw = ImageDraw.Draw(image)
@@ -57,7 +61,7 @@ def apply_hatching(image, percentage, fake_score):
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
 
     # Créer une image masque avec le filtre rouge et le texte
-    mask_image = Image.new("RGBA", (width, filter_height), (255, 0, 0, 128))
+    mask_image = Image.new("RGBA", (width, height), (255, 0, 0, 128))
     mask_image = mask_image.convert("RGBA")
 
     # Réduire l'opacité du masque

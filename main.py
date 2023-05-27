@@ -43,7 +43,7 @@ def apply_fake_filter(image, fake_score, add_text):
     # Convert the fake score to text
     text = f"{int(fake_score*100)}%"
     
-    font_size = int(height * 0.08)  # adjust the percentage as needed
+    font_size = int(height * 0.27)  # adjust the percentage as needed
 
 
     # Specify the font and size

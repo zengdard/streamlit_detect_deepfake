@@ -14,7 +14,7 @@ os.environ["HUGGINGFACE_TOKEN"] = "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"
 image_size = (128, 128)
 additional_text = 'FAKE'
 
-POLICE = 'TypoSlab Irregular shadowed_demo.otf'
+POLICE = 'TypoSlab Irregular Demo.otf'
 
 
 def download_file(url, local_path):

@@ -41,7 +41,7 @@ def apply_fake_filter(image, fake_score):
     height, width, _ = image_array.shape
 
     # Convert the fake score to text
-    text = f"FAKE: {fake_score*100}%"
+    text = f"{int(fake_score*100)}%"
 
     # Specify the font and size
     font = ImageFont.truetype(POLICE, size=75)

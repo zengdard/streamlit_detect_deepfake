@@ -70,7 +70,9 @@ if uploaded_file is not None:
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
    
     image = prepare_image("chemin_de_sauvegarde.jpg")
-    image = image.reshape(-1, 128, 128, 3)
+    #image = image.reshape(-1, 128, 128, 3)
+    image = np.reshape(image, (-1, 128, 128, 3))
+
     y_pred = model.predict(image)
     # Prédiction
     prediction = model.predict(X)

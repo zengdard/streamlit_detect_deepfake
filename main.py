@@ -73,7 +73,7 @@ def apply_fake_filter(image, fake_score, additional_text):
     # Create a mask image with the red filter
     mask_image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     mask_draw = ImageDraw.Draw(mask_image)
-    if add_text == 'fake' :
+    if additional_text == 'fake' :
         mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(255, 0, 0, int(255*0.7)))
     else:
         mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(0, 0, 255, int(255*0.7)))

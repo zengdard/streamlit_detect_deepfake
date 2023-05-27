@@ -25,9 +25,14 @@ def load_keras_model_from_hub(model_id):
     download_file(model_url, local_path)
 import numpy as np
 from PIL import Image, ImageDraw
+
+
 def apply_hatching(image, percentage, opacity=0.5):
+    # Convertir l'image en mode RGBA
+    image_rgba = image.convert("RGBA")
+
     # Convertir l'image en tableau NumPy
-    image_array = np.array(image)
+    image_array = np.array(image_rgba)
 
     # Déterminer les dimensions de l'image
     height, width, _ = image_array.shape
@@ -35,13 +40,11 @@ def apply_hatching(image, percentage, opacity=0.5):
     # Calculer la hauteur de la partie à filtrer
     filter_height = int(height * (percentage ))
 
-    # Créer une image rouge avec l'opacité réduite
-    red_image = np.zeros_like(image_array)
-    red_image[:, :, 0] = 255  # Canal rouge à 255
-    red_image[:, :, 3] = int(255 * opacity)  # Canal d'opacité
+    # Créer un tableau pour le canal d'opacité
+    opacity_array = np.full((height, width, 1), int(255 * opacity), dtype=np.uint8)
 
-    # Fusionner l'image rouge avec l'image originale
-    filtered_image_array = np.where(np.arange(height)[:, None] < filter_height, red_image, image_array)
+    # Fusionner l'image avec le filtre rouge et l'opacité réduite
+    filtered_image_array = np.where(np.arange(height)[:, None] < filter_height, [255, 0, 0, opacity_array], image_array)
 
     # Créer une nouvelle image PIL avec le filtre appliqué
     filtered_image = Image.fromarray(filtered_image_array)

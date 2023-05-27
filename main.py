@@ -42,15 +42,18 @@ def apply_fake_filter(image, fake_score, add_text):
 
     # Convert the fake score to text
     text = f"{int(fake_score*100)}%"
+    
+    font_size = int(height * 0.08)  # adjust the percentage as needed
+
 
     # Specify the font and size
-    font = ImageFont.truetype(POLICE, size=75)
+    font = ImageFont.truetype(POLICE, size=font_size)
 
     # Create an ImageDraw object
     draw = ImageDraw.Draw(image)
 
     # Specify the coordinates of the text in the middle of the image
-    text_width, text_height = draw.textsize(text, font)
+    text_width, text_height = draw.textsize(text, font, size= font_size - 15)
     text_x = (width - text_width) // 2
     text_y = (height - text_height) // 2
 

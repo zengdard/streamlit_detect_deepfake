@@ -56,7 +56,19 @@ def apply_fake_filter(image, fake_score):
 
     # Draw the text on the image in white
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
+    
+    
+ # Calculate the additional text's coordinates
+    additional_text_width, additional_text_height = draw.textsize(additional_text, font)
+    additional_text_x = (width - additional_text_width) // 2
+    additional_text_y = text_y + text_height
 
+    # Draw the additional text on the image in white
+    draw.text((additional_text_x, additional_text_y), additional_text, font=font, fill=(255, 255, 255))
+
+
+    
+    
     # Calculate filter size based on fake_score
     filter_height = int(height * fake_score)
 

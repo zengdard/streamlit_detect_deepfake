@@ -37,6 +37,7 @@ def apply_hatching(image, percentage):
 
     # Appliquer le filtre rouge à la partie de l'image
     image_array[:filter_height, :, :] = [255, 0, 0]  # Couleur rouge pour le filtre
+    red_image[:, :, 3] = int(255 * 0.5)  # Canal d'opacité
 
     # Créer une nouvelle image PIL avec le filtre appliqué
     filtered_image = Image.fromarray(image_array)

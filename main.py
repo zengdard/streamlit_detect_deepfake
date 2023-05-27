@@ -61,7 +61,7 @@ def apply_hatching(image, percentage, fake_score):
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
 
     # Créer une image masque avec le filtre rouge et le texte
-    mask_image = Image.new("RGBA", (width, height), (255, 0, 0, 128))
+    mask_image = Image.new("RGBA", (width, height - filter_height), (255, 0, 0, 128))
     mask_image = mask_image.convert("RGBA")
 
     # Réduire l'opacité du masque

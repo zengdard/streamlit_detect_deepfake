@@ -37,13 +37,13 @@ def apply_hatching(image, percentage, fake_score):
     height, width, _ = image_array.shape
 
     # Calculer la hauteur de la partie à filtrer
-    filter_height = int(height * percentage)
+    filter_height = int(height * fake_score)
 
     # Convertir le score de fausseté en texte
     text = "FAKE"
 
     # Spécifier la police et la taille
-    font = ImageFont.truetype("TypoSlab Irregular shadowed_demo.otf", size=100)
+    font = ImageFont.truetype("TypoSlab Irregular shadowed_demo.otf", size=75)
 
     # Créer un objet ImageDraw
     draw = ImageDraw.Draw(image)

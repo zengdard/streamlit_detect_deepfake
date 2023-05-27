@@ -33,7 +33,6 @@ from PIL import Image, ImageDraw
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
-
 def apply_fake_filter(image, fake_score):
     # Convert the image to a NumPy array
     image_array = np.array(image)
@@ -62,8 +61,9 @@ def apply_fake_filter(image, fake_score):
     filter_height = int(height * fake_score)
 
     # Create a mask image with the red filter
-    mask_image = Image.new("RGBA", (width, filter_height), (255, 0, 0, int(255*0.5)))
-    mask_image = mask_image.convert("RGBA")
+    mask_image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    mask_draw = ImageDraw.Draw(mask_image)
+    mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(255, 0, 0, int(255*0.5)))
 
     # Create a composite image that includes the original image and the filter
     filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)

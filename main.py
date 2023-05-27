@@ -81,16 +81,13 @@ if uploaded_file is not None:
         load_keras_model_from_hub('Nielzac/Altered_Picture_Model')
         
     image = Image.open(uploaded_file)
+    st.image(image, caption="Image originale", use_column_width=True)
+    
     image.save("chemin_de_sauvegarde.jpg")
     model = load_model('model_casia_run1.h5',compile=False)
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
     image = prepare_image('chemin_de_sauvegarde.jpg')
-   
-
-    
-    st.image(image, caption="Image originale", use_column_width=True)
-
-
+  
     # Prédiction
     prediction = model.predict(image)
     fake_percentage = prediction[0][1] * 100

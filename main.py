@@ -37,7 +37,7 @@ def apply_hatching(image, percentage, fake_score):
     filter_height = int(height * (percentage))
 
     # Appliquer le filtre rouge à la partie de l'image
-    image_array[:filter_height, :, :] = [255, 0, 0]  # Couleur rouge pour le filtre
+    #image_array[:filter_height, :, :] = [255, 0, 0]  # Couleur rouge pour le filtre
 
     # Convertir le score de fausseté en texte
     text = f"Score: {fake_score:.2f}"

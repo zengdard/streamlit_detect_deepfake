@@ -32,6 +32,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
+
 def apply_fake_filter(image, percentage, fake_score):
     # Convert the image to a NumPy array
     image_array = np.array(image)
@@ -125,5 +126,5 @@ if uploaded_file is not None:
     st.write(f'Class: {class_names[y_pred_class]} Confidence: {np.amax(y_pred) * 100:0.2f}')
 
     # Appliquer le hachurage
-    hatched_image = apply_hatching(image3, np.amax(y_pred),np.amax(y_pred))
+    hatched_image = apply_fake_filter(image3, np.amax(y_pred),np.amax(y_pred))
     st.image(hatched_image, caption="Image avec hachurage", use_column_width=True)

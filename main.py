@@ -77,7 +77,7 @@ def apply_fake_filter(image, fake_score, add_text):
     mask_draw = ImageDraw.Draw(mask_image)
     if add_text == 'fake' :
         mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(255, 0, 0, int(255*0.5)))
-    esle:
+    else:
         mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(0, 0, 255, int(255*0.5)))
 
 

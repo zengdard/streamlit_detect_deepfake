@@ -17,75 +17,45 @@ def download_file(url, local_path):
 
 def load_keras_model_from_hub(model_id):
     model_url = f"https://huggingface.co/{model_id}/resolve/main/TALEYRAND.h5"
-    local_path = "TALEYRAND.h5"
+    local_path = "model_casia_run1.h5"
     download_file(model_url, local_path)
-   
-
-
-
-
-
+  
 
 st.set_page_config(page_title="Fake Domain Detector", layout="wide")
 
 st.title("Fake Domain Detector (Beta) - StendhalGPT Security")
-st.markdown(
-    """
-    This service helps detect potentially fake domain names. The model is trained on a dataset of 50,000 sites,
-    which represents around 2% of the available data. It's suitable for businesses and also integrated soon into StendhalGPT+.\n
-    Only avalaible for .fr websites. \nExample : 'colis-livraison.fr', 'cnil-info.fr', 'antai-gov.fr', 'amendes-paiement.fr', 'leclerc.fr', 'hachette.fr'.  
-    """
-)
+# Préparer l'image
+def prepare_image(image):
+    image = image.resize((128, 128))
+    image = np.array(image) / 255.0
+    image = image.reshape(-1, 128, 128, 3)
+    return image
 
-# Input domain names
-domain_names = st.text_input("Enter a domain name:")
+# Fonction pour hachurer l'image
+def apply_hatching(image, percentage):
+    hatched_image = np.array(image)
+    h, w, _ = hatched_image.shape
+    mask = np.random.choice([0, 1], size=(h, w), p=[1 - percentage, percentage])
+    hatched_image[mask == 1] = [255, 0, 0]  # Couleur rouge pour le hachurage
+    return hatched_image
 
-if st.button("Predict"):
-    try: 
-        model = load_model('TALEYRAND.h5')
-        model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
+# Interface Streamlit
+st.title("Détection de fausses images")
 
-    except:
-        load_keras_model_from_hub('nielzac/private_fake')
+# Charger l'image
+uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "png"])
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Image originale", use_column_width=True)
 
-    model = load_model('TALEYRAND.h5',compile=False)
-    model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
+    # Prétraitement de l'image
+    preprocessed_image = prepare_image(image)
 
-    
+    # Prédiction
+    prediction = model.predict(preprocessed_image)
+    fake_percentage = prediction[0][1] * 100
+    st.write(f"Probabilité d'être fausse : {fake_percentage:.2f}%")
 
-
-    tokenizer = UnicodeCodepointTokenizer(input_encoding="ISO 8859-1", output_encoding="ISO 8859-1")
-    tokenized_domains_2 = []
-    for name in [domain_names]:
-        tokens = tokenizer.tokenize(name)
-        tokenized_domains_2.append(tokens)
-
-    X_new = keras.utils.data_utils.pad_sequences (tokenized_domains_2, maxlen=26, padding='post')
-
-    # Faire une prédiction sur les noms de domaines
-    y_pred = model.predict(X_new)
-    
-    # Display prediction
-    st.write("Prediction score: ", y_pred)
-
-    threshold = 0.5
-   
-    if y_pred[0] < threshold:
-        st.write(f"The domain is likely to be genuine. (Prediction score: {y_pred[0][0]})")
-        background_color = "green"
-    else:
-        st.write(f"The domain is likely to be fake. (Prediction score: {y_pred[0][0]})")
-        background_color = "red"
-
-    confidence_interval = 0.1
-    if abs(y_pred[0] - threshold) < confidence_interval:
-        st.write("Note: The prediction score is close to the threshold. The result may not be as reliable.")
-        
-
-# Définir les informations sur l'origine des données
-    data_source = "Afnic, https://dl.red.flag.domains/ and others"
-    # Définir l'adresse de contact
-    contact_address = "contact@stendhalgpt.fr"
-    st.write(f"Data source: {data_source}")
-    st.write(f"Contact: {contact_address}")
-    st.markdown(f'<style>body {{ background-color: {background_color}; }}</style>', unsafe_allow_html=True)
+    # Appliquer le hachurage
+    hatched_image = apply_hatching(image, fake_percentage / 100)
+    st.image(hatched_image, caption="Image avec hachurage", use_column_width=True)

@@ -87,7 +87,8 @@ if uploaded_file is not None:
     model = load_model('model_casia_run1.h5',compile=False)
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
     image = prepare_image('chemin_de_sauvegarde.jpg')
-  
+    X = np.array(X)
+    X = X.reshape(-1, 128, 128, 3)
     # Prédiction
     prediction = model.predict(image)
     fake_percentage = prediction[0][1] * 100

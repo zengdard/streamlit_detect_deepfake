@@ -25,7 +25,6 @@ def load_keras_model_from_hub(model_id):
     download_file(model_url, local_path)
 import numpy as np
 from PIL import Image, ImageDraw
-
 def apply_hatching(image, percentage):
     # Convertir l'image en tableau NumPy
     image_array = np.array(image)
@@ -33,24 +32,23 @@ def apply_hatching(image, percentage):
     # Déterminer les dimensions de l'image
     height, width, _ = image_array.shape
 
-    # Calculer le nombre de traits à dessiner
-    num_lines = int(height * width * (percentage / 100))
+    # Calculer le nombre de pixels à remplacer par le filtre rouge
+    num_pixels = int(height * width * (percentage / 100))
 
-    # Générer les coordonnées de début et de fin des traits diagonaux
-    line_coords = np.random.randint(0, high=width, size=(num_lines, 2))
-    line_coords[:, 1] = np.random.randint(0, high=height, size=num_lines)
-    line_coords[:, 2] = line_coords[:, 0] + np.random.randint(1, high=width - line_coords[:, 0], size=num_lines)
-    line_coords[:, 3] = line_coords[:, 1] + np.random.randint(1, high=height - line_coords[:, 1], size=num_lines)
+    # Générer les indices aléatoires des pixels à modifier
+    pixel_indices = np.random.choice(height * width, size=num_pixels, replace=False)
 
-    # Dessiner les traits diagonaux sur l'image
-    drawn_image = Image.fromarray(image_array)
-    draw = ImageDraw.Draw(drawn_image)
-    for coord in line_coords:
-        x1, y1, x2, y2 = coord
-        draw.line([(x1, y1), (x2, y2)], fill=(255, 0, 0), width=1)
+    # Appliquer le filtre rouge aux pixels sélectionnés
+    image_array_flat = image_array.reshape(-1, 3)  # Convertir en tableau 2D (pixels x 3)
+    image_array_flat[pixel_indices] = [255, 0, 0]  # Couleur rouge pour le filtre
 
-    return drawn_image
+    # Remettre le tableau dans la forme originale
+    image_array = image_array_flat.reshape(height, width, 3)
 
+    # Créer une nouvelle image PIL avec le filtre appliqué
+    filtered_image = Image.fromarray(image_array)
+
+    return filtered_image
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0
 

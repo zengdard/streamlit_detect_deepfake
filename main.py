@@ -31,58 +31,56 @@ def load_keras_model_from_hub(model_id):
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
-def apply_fake_filter(image, fake_score, additional_text):
-    # Convert the image to a NumPy array
+import cv2
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont
+
+def apply_gradient_and_text(image, percentage, fake_score):
+    # Convert image to numpy array
     image_array = np.array(image)
 
-    # Determine the image dimensions
+    # Calculate the height of the part to filter
     height, width, _ = image_array.shape
+    filter_height = int(height * fake_score)
 
-    # Convert the fake score to text
-    text = f"{int(fake_score*100)}%"
-    
-    font_size = int(height * 0.28)  # adjust the percentage as needed
+    # Create a mask with the same width and height as the original image
+    mask = np.zeros((height, width), dtype=np.uint8)
 
+    # Calculate the start and end values for the gradient
+    start_value = int(255 * 0.5)  # 50% opacity
+    end_value = 0  # 0% opacity
+
+    # Calculate the values for each pixel in the mask
+    for i in range(filter_height, height):
+        mask[i] = np.interp(i, [filter_height, height], [start_value, end_value])
+
+    # Create a colored image (blue) with the same size as the original image
+    color_image = np.zeros((height, width, 3), dtype=np.uint8)
+    color_image[:,:] = (255, 0, 0)  # Blue color
+
+    # Blend the original image with the color image using the mask
+    blended_image = cv2.bitwise_and(color_image, color_image, mask=mask)
+    blended_image = cv2.addWeighted(image_array, 1, blended_image, 1, 0)
+
+    # Convert blended image to a Pillow image
+    blended_image_pillow = Image.fromarray(blended_image)
 
     # Specify the font and size
-    font = ImageFont.truetype(POLICE, size=font_size)
+    font = ImageFont.truetype("arial", size=75)
 
     # Create an ImageDraw object
-    draw = ImageDraw.Draw(image)
+    draw = ImageDraw.Draw(blended_image_pillow)
 
-    # Specify the coordinates of the text in the middle of the image
+    # Convert fake score to text and calculate the text's coordinates
+    text = "FAKE {:.1f}%".format(fake_score * 100)
     text_width, text_height = draw.textsize(text, font)
     text_x = (width - text_width) // 2
-    
- # Calculate the additional text's coordinates
-    additional_text_width, additional_text_height = draw.textsize(additional_text, font)
-    additional_text_x = (width - additional_text_width) // 2
-    additional_text_y = height // 2 
-    
-    text_y = height // 2 - additional_text_height 
+    text_y = (height - text_height) // 4
 
     # Draw the text on the image in white
     draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
-    # Draw the additional text on the image in white
-    draw.text((additional_text_x, additional_text_y), additional_text, font=font, fill=(255, 255, 255))
 
-    
-    # Calculate filter size based on fake_score
-    filter_height = int(height * fake_score)
-
-    # Create a mask image with the red filter
-    mask_image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    mask_draw = ImageDraw.Draw(mask_image)
-    if additional_text == 'fake' :
-        mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(255, 0, 0, int(255*0.7)))
-    else:
-        mask_draw.rectangle([(0, 0), (width, filter_height)], fill=(0, 0, 255, int(255*0.7)))
-
-    medium_size = (height//2, width//2)
-    # Create a composite image that includes the original image and the filter
-    filtered_image = Image.alpha_composite(image.convert("RGBA"), mask_image)
-
-    return filtered_image
+    return blended_image_pillow
 
 
 def prepare_image(image_path):

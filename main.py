@@ -26,6 +26,7 @@ def load_keras_model_from_hub(model_id):
     download_file(model_url, local_path)
 import numpy as np
 from PIL import Image, ImageDraw
+
 def apply_hatching(image, percentage, fake_score):
     # Convertir l'image en tableau NumPy
     image_array = np.array(image)
@@ -34,10 +35,7 @@ def apply_hatching(image, percentage, fake_score):
     height, width, _ = image_array.shape
 
     # Calculer la hauteur de la partie à filtrer
-    filter_height = int(height * (percentage))
-
-    # Appliquer le filtre rouge à la partie de l'image
-    #image_array[:filter_height, :, :] = [255, 0, 0]  # Couleur rouge pour le filtre
+    filter_height = int(height * percentage)
 
     # Convertir le score de fausseté en texte
     text = f"{fake_score}"
@@ -55,10 +53,12 @@ def apply_hatching(image, percentage, fake_score):
     # Dessiner le texte sur l'image avec l'opacité réduite
     draw.text((x, y), text, font=font, fill=(255, 255, 255, 255))
 
-    # Créer une nouvelle image PIL avec le filtre et le texte appliqués
-    filtered_image = Image.fromarray(image_array)
+    # Appliquer le filtre rouge à la partie de l'image avec une opacité divisée par 2
+    red_filter = Image.new("RGBA", image.size, (255, 0, 0, 128))
+    image_with_filter = Image.alpha_composite(image.convert("RGBA"), red_filter)
 
-    return image
+    return image_with_filter
+
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0
 

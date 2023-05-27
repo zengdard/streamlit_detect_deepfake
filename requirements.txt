@@ -4,3 +4,4 @@ pandas==1.5.3
 requests==2.30.0
 streamlit==1.22.0
 regex==2022.10.31
+pip install tensorflow==2.7.0

@@ -12,7 +12,7 @@ class_names = ['fake', 'real']
 os.environ["HUGGINGFACE_TOKEN"] = "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"
 
 image_size = (128, 128)
-additional_text = 'FAKE'
+
 
 POLICE = 'TypoSlab Irregular Demo.otf'
 
@@ -28,8 +28,6 @@ def load_keras_model_from_hub(model_id):
     model_url = f"https://huggingface.co/Nielzac/Altered_Picture_Model/resolve/main/model_casia_run1.h5"
     local_path = "model_casia_run1.h5"
     download_file(model_url, local_path)
-import numpy as np
-from PIL import Image, ImageDraw
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
@@ -68,8 +66,6 @@ def apply_fake_filter(image, fake_score, add_text):
     # Draw the additional text on the image in white
     draw.text((additional_text_x, additional_text_y), additional_text, font=font, fill=(255, 255, 255))
 
-
-    
     
     # Calculate filter size based on fake_score
     filter_height = int(height * fake_score)
@@ -111,9 +107,9 @@ def convert_to_ela_image(path, quality):
     
     return ela_image
 
-st.set_page_config(page_title="Fake Domain Detector", layout="wide")
+st.set_page_config(page_title="Fake Photo Identifier", layout="wide")
 
-st.title("Fake Domain Detector (Beta) - StendhalGPT Security")
+st.title("Fake Photo Identifier (Beta) - StendhalGPT Gogh")
 
 # Charger l'image
 uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "jpeg", "png"])
@@ -148,4 +144,15 @@ if uploaded_file is not None:
 
     # Appliquer le hachurage
     hatched_image = apply_fake_filter(image3,np.amax(y_pred), class_names[y_pred_class])
-    st.image(hatched_image,  use_column_width=False)
+    medium_size = (500, 500)  # adjust the size as needed
+    hatched_image = hatched_image.resize(medium_size)
+
+    # Display the image
+    st.image(hatched_image, use_column_width=False)
+    
+    st.markdown("""
+    ## Source des données
+    Les données utilisées pour l'entraînement de ce modèle proviennent de l'ensemble de données CASIA disponible sur Kaggle, 
+    qui a été partagé par Sophatvathana. L'ensemble de données peut être consulté à l'adresse suivante : 
+    [CASIA Dataset](https://www.kaggle.com/datasets/sophatvathana/casia-dataset)
+    """)

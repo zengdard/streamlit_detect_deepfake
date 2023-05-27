@@ -66,6 +66,7 @@ if uploaded_file is not None:
     st.image(image, caption="Image originale", use_column_width=True)
     
     image.save("chemin_de_sauvegarde.jpg")
+    print('#################OK')
     model = load_model('model_casia_run1.h5', compile=False)
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
    

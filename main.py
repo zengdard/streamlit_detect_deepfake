@@ -72,7 +72,7 @@ if uploaded_file is not None:
     image = prepare_image("chemin_de_sauvegarde.jpg")
     #image = image.reshape(-1, 128, 128, 3)
     image2 = np.reshape(image, (-1, 128, 128, 3))
-    prin(image2.shape)
+    print(image2.shape)
     y_pred = model.predict(image2)
     # Prédiction
     

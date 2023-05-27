@@ -1,0 +1,1 @@
+# stendhal_detect_fake_photo

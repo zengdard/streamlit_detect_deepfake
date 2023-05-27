@@ -59,7 +59,7 @@ def apply_fake_filter(image, fake_score):
     
     
  # Calculate the additional text's coordinates
-    additional_text_width, additional_text_height = draw.textsize(additional_text, font)
+    additional_text_width, additional_text_height = draw.textsize('FAKE', font)
     additional_text_x = (width - additional_text_width) // 2
     additional_text_y = text_y + text_height
 

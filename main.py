@@ -90,7 +90,7 @@ if uploaded_file is not None:
     X = np.array(image)
     X = X.reshape(-1, 128, 128, 3)
     # Prédiction
-    prediction = model.predict(image)
+    prediction = model.predict(X)
     fake_percentage = prediction[0][1] * 100
     st.write(f"Probabilité d'être fausse : {fake_percentage:.2f}%")
 

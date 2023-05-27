@@ -5,6 +5,7 @@ from keras.models import load_model
 import streamlit as st
 from PIL import Image
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
 from PIL import Image, ImageChops, ImageEnhance
 class_names = ['fake', 'real']

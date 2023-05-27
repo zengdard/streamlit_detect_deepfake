@@ -86,7 +86,7 @@ if uploaded_file is not None:
 
     image3 = Image.open(uploaded_file)
     image = image3
-    st.image(image, caption="Image originale", use_column_width=True)
+    #st.image(image, caption="Image originale", use_column_width=True)
     
     image.save("chemin_de_sauvegarde.jpg")
     print('#################OK')

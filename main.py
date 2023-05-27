@@ -126,7 +126,8 @@ if uploaded_file is not None:
     print('#################OK')
     model = load_model('model_casia_run1.h5', compile=False)
     model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
-   
+    #filtered_image = filtered_image.convert("RGB")
+    #filtered_image.save("filtered_image.jpg", "JPEG")
     image = prepare_image("chemin_de_sauvegarde.jpg")
     print(image.shape)
     #image = image.reshape(-1, 128, 128, 3)

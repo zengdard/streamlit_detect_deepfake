@@ -72,10 +72,10 @@ if uploaded_file is not None:
     image = prepare_image("chemin_de_sauvegarde.jpg")
     #image = image.reshape(-1, 128, 128, 3)
     image = np.reshape(image, (-1, 128, 128, 3))
-
+    print(X.shape)
     y_pred = model.predict(image)
     # Prédiction
-    prediction = model.predict(X)
+    
     fake_percentage = prediction[0][1] * 100
     st.write(f"Probabilité d'être fausse : {fake_percentage:.2f}%")
 

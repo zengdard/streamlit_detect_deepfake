@@ -37,29 +37,29 @@ def apply_hatching(image, percentage, fake_score):
     filter_height = int(height * percentage)
 
     # Convertir le score de fausseté en texte
-    text = f"{fake_score}"
+    text = "FAKE"
 
     # Spécifier la police et la taille
-    font = ImageFont.truetype("TypoSlab Irregular shadowed_demo.otf", size=40)
+    font = ImageFont.truetype("chemin_vers_la_police.ttf", size=100)
 
     # Créer un objet ImageDraw
     draw = ImageDraw.Draw(image)
 
-    # Spécifier les coordonnées du texte
-    y = height/2
-    x = width/2
+    # Spécifier les coordonnées du texte au milieu de l'image
+    text_width, text_height = draw.textsize(text, font)
+    text_x = (width - text_width) // 2
+    text_y = (height - text_height) // 2
 
-    # Dessiner le texte sur l'image avec l'opacité réduite
-    draw.text((x, y), text, font=font, fill=(255, 255, 255, 255))
+    # Dessiner le texte sur l'image en blanc
+    draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
 
-    # Créer le filtre rouge proportionnel à l'image
-    red_filter = Image.new("RGBA", (width, filter_height), (255, 0, 0, 128))
+    # Créer un masque d'opacité pour le filtre rouge
+    opacity_mask = Image.new("L", (width, height), 0)
+    opacity_mask.paste(255, (0, 0, width, filter_height))
 
-    # Redimensionner le filtre rouge pour qu'il corresponde à la taille de l'image
-    red_filter_resized = red_filter.resize((int(width *fake_score) , int(height*fake_score)), Image.ANTIALIAS)
-
-    # Fusionner le filtre avec l'image d'origine
-    image_with_filter = Image.alpha_composite(image.convert("RGBA"), red_filter_resized)
+    # Appliquer le filtre rouge à l'image avec l'opacité réduite
+    red_filter = Image.new("RGBA", (width, height), (255, 0, 0, 128))
+    image_with_filter = Image.composite(red_filter, image.convert("RGBA"), opacity_mask)
 
     return image_with_filter
 

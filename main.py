@@ -23,6 +23,9 @@ def load_keras_model_from_hub(model_id):
     model_url = f"https://huggingface.co/Nielzac/Altered_Picture_Model/resolve/main/model_casia_run1.h5"
     local_path = "model_casia_run1.h5"
     download_file(model_url, local_path)
+import numpy as np
+from PIL import Image, ImageDraw
+
 def apply_hatching(image, percentage):
     # Convertir l'image en tableau NumPy
     image_array = np.array(image)
@@ -44,9 +47,10 @@ def apply_hatching(image, percentage):
     draw = ImageDraw.Draw(drawn_image)
     for coord in line_coords:
         x1, y1, x2, y2 = coord
-        draw.line((x1, y1, x2, y2), fill=(255, 0, 0), width=1)
+        draw.line([(x1, y1), (x2, y2)], fill=(255, 0, 0), width=1)
 
     return drawn_image
+
 def prepare_image(image_path):
     return np.array(convert_to_ela_image(image_path, 90).resize(image_size)).flatten() / 255.0
 

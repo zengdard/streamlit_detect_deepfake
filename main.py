@@ -67,7 +67,8 @@ if uploaded_file is not None:
     except:
         load_keras_model_from_hub('Altered_Picture_Model')
 
-    image = Image.open(uploaded_file)
+    image3 = Image.open(uploaded_file)
+    image = image3
     st.image(image, caption="Image originale", use_column_width=True)
     
     image.save("chemin_de_sauvegarde.jpg")
@@ -87,5 +88,5 @@ if uploaded_file is not None:
     st.write(f"Probabilité d'être fausse : {fake_percentage:.2f}%")
 
     # Appliquer le hachurage
-    hatched_image = apply_hatching(image, fake_percentage / 100)
+    hatched_image = apply_hatching(image3, fake_percentage / 100)
     st.image(hatched_image, caption="Image avec hachurage", use_column_width=True)

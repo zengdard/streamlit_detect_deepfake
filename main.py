@@ -40,7 +40,7 @@ def apply_hatching(image, percentage, fake_score):
     #image_array[:filter_height, :, :] = [255, 0, 0]  # Couleur rouge pour le filtre
 
     # Convertir le score de fausseté en texte
-    text = f"{fake_score"}
+    text = f"{fake_score}"
 
     # Spécifier la police et la taille
     font = ImageFont.truetype("TypoSlab Irregular shadowed_demo.otf", size=40)

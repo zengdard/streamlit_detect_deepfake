@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
 from PIL import Image, ImageChops, ImageEnhance
 class_names = ['fake', 'real']
-os.environ["HUGGINGFACE_TOKEN"] = "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"
+os.environ["HUGGINGFACE_TOKEN"] = "htTtsP"
 
 image_size = (128, 128)
 
